@@ -185,7 +185,7 @@ export function VisitorStatusView({
 
   if (isLoading && !visitor) {
     return (
-      <div className="flex justify-center py-12 text-sm text-muted-foreground">
+      <div className="flex justify-center py-12 text-sm font-semibold text-foreground">
         방문 신청 정보를 불러오는 중...
       </div>
     )
@@ -206,13 +206,13 @@ export function VisitorStatusView({
   return (
     <div className="mx-auto w-full max-w-md min-w-0 space-y-4 overflow-x-hidden">
       <AlertDialog open={Boolean(announcement)} onOpenChange={() => undefined}>
-        <AlertDialogContent className="border-2 border-amber-400 bg-popover text-popover-foreground shadow-2xl shadow-black/60 sm:max-w-md">
+        <AlertDialogContent className="border-4 border-blue-700 bg-white text-slate-950 shadow-2xl shadow-slate-950/40 sm:max-w-md dark:border-yellow-300 dark:bg-slate-950 dark:text-white">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-amber-300">관리자 공지</AlertDialogTitle>
-            <AlertDialogDescription className="whitespace-pre-wrap text-base font-medium leading-relaxed text-white">
+            <AlertDialogTitle className="text-xl font-black text-blue-900 dark:text-yellow-300">관리자 공지</AlertDialogTitle>
+            <AlertDialogDescription className="whitespace-pre-wrap text-base font-bold leading-relaxed text-slate-950 dark:text-white">
               {announcement?.text}
               {announcement?.created_at && (
-                <span className="mt-3 block text-xs text-slate-500">
+                <span className="mt-3 block text-xs font-bold text-slate-700 dark:text-slate-300">
                   전송 시각: {new Date(announcement.created_at).toLocaleString("ko-KR", {
                     timeZone: "Asia/Seoul",
                     dateStyle: "short",
@@ -223,13 +223,13 @@ export function VisitorStatusView({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction className="w-full bg-amber-400 font-bold text-slate-950 hover:bg-amber-300" onClick={acknowledgeAnnouncement}>확인했습니다.</AlertDialogAction>
+            <AlertDialogAction className="w-full bg-blue-700 font-black text-white hover:bg-blue-800 dark:bg-yellow-300 dark:text-slate-950 dark:hover:bg-yellow-200" onClick={acknowledgeAnnouncement}>확인했습니다.</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       {/* 위변조 방지 시계 */}
-      <div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/10 px-4 py-2.5 text-xs text-primary shadow-sm">
+      <div className="flex items-center justify-between rounded-lg border-2 border-blue-700 bg-blue-50 px-4 py-2.5 text-xs font-bold text-blue-950 shadow-sm dark:border-cyan-300 dark:bg-cyan-950 dark:text-cyan-100">
         <div className="flex items-center gap-1.5 font-medium">
           <ShieldAlert className="size-4 animate-pulse text-primary" />
           <span>위변조 방지 실시간 시계</span>
