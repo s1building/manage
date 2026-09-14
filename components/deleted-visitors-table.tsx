@@ -88,7 +88,7 @@ export function DeletedVisitorsTable({
             <TableHead>작업층 확인</TableHead>
             <TableHead>담당자 성함</TableHead>
             <TableHead>담당자 소속</TableHead>
-            <TableHead className="hidden lg:table-cell">전화번호</TableHead>
+            <TableHead>전화번호</TableHead>
             <TableHead className="text-center">등록일</TableHead>
             <TableHead className="text-center">삭제일</TableHead>
             <TableHead className="text-right">관리</TableHead>
@@ -104,7 +104,7 @@ export function DeletedVisitorsTable({
                 <TableCell><Button size="sm" variant="outline" onClick={() => setFloorVisitor(v)}>작업층 확인</Button></TableCell>
                 <TableCell>{v.contact_name || v.contactName || "-"}</TableCell>
                 <TableCell>{v.contact_company || v.contactCompany || "-"}</TableCell>
-                <TableCell className="hidden font-mono text-xs text-muted-foreground lg:table-cell">
+                <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">
                   {v.phone ?? "-"}
                 </TableCell>
                 <TableCell className="text-center text-sm text-muted-foreground">
