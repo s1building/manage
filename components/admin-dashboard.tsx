@@ -211,22 +211,22 @@ export function AdminDashboard() {
         }
 
         if (v.status === "onsite") {
-          // 입실일 뷰에는 다음 날로 이어졌음을 표시하고, 이후 날짜 뷰에서는 빈 값으로 표시합니다.
-          displayExitedAt = enteredDate === selectedDate ? "명일인계" : "-"
+          // 선택일에 입실한 오늘 방문자는 명일인계가 아니며, 과거 KST 입실자만 인계 표시합니다.
+          displayExitedAt = enteredDate !== "" && enteredDate < selectedDate ? "명일인계" : "-"
         } else if (v.status === "exited" && rawExitedAt) {
-          if (exitedDate > selectedDate && enteredDate === selectedDate) {
+          if (enteredDate !== "" && enteredDate < selectedDate && exitedDate > selectedDate) {
             displayExitedAt = "명일인계"
           } else {
-          try {
-            displayExitedAt = new Date(rawExitedAt).toLocaleTimeString("ko-KR", {
-              timeZone: "Asia/Seoul",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            })
-          } catch {
-            displayExitedAt = rawExitedAt
-          }
+            try {
+              displayExitedAt = new Date(rawExitedAt).toLocaleTimeString("ko-KR", {
+                timeZone: "Asia/Seoul",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })
+            } catch {
+              displayExitedAt = rawExitedAt
+            }
           }
         }
 
