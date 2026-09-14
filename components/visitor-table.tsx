@@ -46,7 +46,7 @@ async function copyForPortal(value: string, label: string, portalSearchMode: boo
   }
 }
 
-const PORTAL_CELL_CLASS = "hidden lg:table-cell cursor-pointer transition-colors hover:bg-primary/10 hover:text-primary"
+const PORTAL_CELL_CLASS = "cursor-default transition-colors lg:cursor-pointer lg:hover:bg-primary/10 lg:hover:text-primary"
 
 const STATUS_META: Record<VisitorStatus, { label: string; className: string }> = {
   pending: {
@@ -174,7 +174,7 @@ function VisitorRow({
       <TableCell className={`${PORTAL_CELL_CLASS} font-medium`} onClick={() => copyForPortal(visitor.name ?? "", "이름", portalSearchMode)}>{visitor.name ?? "-"}</TableCell>
       <TableCell className={`${PORTAL_CELL_CLASS} text-muted-foreground`} onClick={() => copyForPortal(visitor.company ?? "", "소속", portalSearchMode)}>{visitor.company ?? "-"}</TableCell>
       <TableCell><Button type="button" variant="outline" size="sm" className="whitespace-nowrap" onClick={() => onOpenFloors(visitor)} title="작업층 확인">작업층 확인</Button></TableCell>
-      <TableCell className={`${PORTAL_CELL_CLASS} font-mono text-xs text-muted-foreground`} onClick={() => copyForPortal(visitor.phone ?? "", "전화번호", portalSearchMode)}>
+      <TableCell className={`${PORTAL_CELL_CLASS} font-mono text-xs text-muted-foreground whitespace-nowrap`} onClick={() => copyForPortal(visitor.phone ?? "", "전화번호", portalSearchMode)}>
         {visitor.phone ?? "-"}
       </TableCell>
       <TableCell className={PORTAL_CELL_CLASS} onClick={() => copyForPortal(visitor.contact_name || visitor.contactName || "", "담당자 성함", portalSearchMode)}>{visitor.contact_name || visitor.contactName || "-"}</TableCell>
@@ -445,7 +445,7 @@ export function VisitorTable({
 <TableHead>이름</TableHead>
             <TableHead>소속</TableHead>
             <TableHead>작업층</TableHead>
-            <TableHead className="hidden lg:table-cell">전화번호</TableHead>
+            <TableHead>전화번호</TableHead>
             <TableHead>담당자 성함</TableHead>
             <TableHead>담당자 소속</TableHead>
               <TableHead className="text-center">입실</TableHead>
