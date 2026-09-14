@@ -31,6 +31,23 @@ const supabase = createClient()
 
 type VisitorStatus = Visitor["status"]
 
+const PORTAL_URL = "http://kor1.samsung.net/portalapp/home"
+
+async function copyForPortal(value: string, label: string, portalSearchMode: boolean) {
+  if (!portalSearchMode || !window.matchMedia("(min-width: 1024px)").matches) return
+  const text = label === "전화번호" ? value.replace(/\D/g, "").slice(-4) : value
+  if (!text) return
+  try {
+    await navigator.clipboard.writeText(text)
+    toast.success(`'${text}' 복사 완료! 포털 검색창에 [Ctrl+V]를 누르세요.`)
+    window.open(PORTAL_URL, "_blank", "noopener,noreferrer")
+  } catch {
+    toast.error("클립보드 복사에 실패했습니다.")
+  }
+}
+
+const PORTAL_CELL_CLASS = "hidden lg:table-cell cursor-pointer transition-colors hover:bg-primary/10 hover:text-primary"
+
 const STATUS_META: Record<VisitorStatus, { label: string; className: string }> = {
   pending: {
     label: "승인 대기",
@@ -59,6 +76,7 @@ function VisitorRow({
   onOpenFloors,
   onOpenEdit,
   isChatOpen,
+  portalSearchMode,
 }: {
   visitor: Visitor & { displayEnteredAt?: string; displayExitedAt?: string }
   busy: boolean
@@ -68,6 +86,7 @@ function VisitorRow({
   onOpenFloors: (visitor: Visitor) => void
   onOpenEdit: (visitor: Visitor) => void
   isChatOpen: boolean
+  portalSearchMode: boolean
 }) {
   const meta = STATUS_META[visitor.status] || STATUS_META.pending
   const [rawMessages, setRawMessages] = useState<ChatMessage[]>([])
@@ -152,14 +171,14 @@ function VisitorRow({
 
   return (
     <TableRow>
-      <TableCell className="font-medium">{visitor.name ?? "-"}</TableCell>
-      <TableCell className="text-muted-foreground">{visitor.company ?? "-"}</TableCell>
+      <TableCell className={`${PORTAL_CELL_CLASS} font-medium`} onClick={() => copyForPortal(visitor.name ?? "", "이름", portalSearchMode)}>{visitor.name ?? "-"}</TableCell>
+      <TableCell className={`${PORTAL_CELL_CLASS} text-muted-foreground`} onClick={() => copyForPortal(visitor.company ?? "", "소속", portalSearchMode)}>{visitor.company ?? "-"}</TableCell>
       <TableCell><Button type="button" variant="outline" size="sm" className="whitespace-nowrap" onClick={() => onOpenFloors(visitor)} title="작업층 확인">작업층 확인</Button></TableCell>
-      <TableCell>{visitor.contact_name || visitor.contactName || "-"}</TableCell>
-      <TableCell>{visitor.contact_company || visitor.contactCompany || "-"}</TableCell>
-      <TableCell className="hidden font-mono text-xs text-muted-foreground lg:table-cell">
+      <TableCell className={`${PORTAL_CELL_CLASS} font-mono text-xs text-muted-foreground`} onClick={() => copyForPortal(visitor.phone ?? "", "전화번호", portalSearchMode)}>
         {visitor.phone ?? "-"}
       </TableCell>
+      <TableCell className={PORTAL_CELL_CLASS} onClick={() => copyForPortal(visitor.contact_name || visitor.contactName || "", "담당자 성함", portalSearchMode)}>{visitor.contact_name || visitor.contactName || "-"}</TableCell>
+      <TableCell className={PORTAL_CELL_CLASS} onClick={() => copyForPortal(visitor.contact_company || visitor.contactCompany || "", "담당자 소속", portalSearchMode)}>{visitor.contact_company || visitor.contactCompany || "-"}</TableCell>
       
       <TableCell className="text-center font-mono text-xs tabular-nums">
         {visitor.displayEnteredAt ?? "-"}
@@ -277,9 +296,11 @@ function VisitorRow({
 export function VisitorTable({
   visitors,
   onMutate,
+  portalSearchMode,
 }: {
   visitors: Visitor[]
   onMutate: () => void
+  portalSearchMode: boolean
 }) {
   const [pendingId, setPendingId] = useState<string | null>(null)
   const [chatWith, setChatWith] = useState<Visitor | null>(null)
@@ -424,9 +445,9 @@ export function VisitorTable({
 <TableHead>이름</TableHead>
             <TableHead>소속</TableHead>
             <TableHead>작업층</TableHead>
+            <TableHead className="hidden lg:table-cell">전화번호</TableHead>
             <TableHead>담당자 성함</TableHead>
             <TableHead>담당자 소속</TableHead>
-            <TableHead className="hidden lg:table-cell">전화번호</TableHead>
               <TableHead className="text-center">입실</TableHead>
               <TableHead className="text-center">퇴실</TableHead>
               <TableHead className="text-center">상태</TableHead>
@@ -447,6 +468,7 @@ export function VisitorTable({
                 onOpenFloors={(visitor) => setFloorVisitor(visitor)}
                 onOpenEdit={handleOpenEdit}
                 isChatOpen={chatWith?.id === v.id}
+                portalSearchMode={portalSearchMode}
               />
             ))}
           </TableBody>
