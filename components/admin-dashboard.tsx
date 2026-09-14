@@ -20,6 +20,7 @@ export function AdminDashboard() {
   const [selectedDate, setSelectedDate] = useState<string>(getTodayString())
   const [expandDeleted, setExpandDeleted] = useState(false)
   const [showOnlyOnsite, setShowOnlyOnsite] = useState(false)
+  const [portalSearchMode, setPortalSearchMode] = useState(false)
   const [announcementOpen, setAnnouncementOpen] = useState(false)
   const [announcementText, setAnnouncementText] = useState("")
   const [sendingAnnouncement, setSendingAnnouncement] = useState(false)
@@ -373,6 +374,9 @@ export function AdminDashboard() {
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => setFloorsOpen(true)}>현재 작업 중인 모든 층 확인</Button>
             <Button variant="outline" size="sm" onClick={() => setAnnouncementOpen(true)}><Megaphone className="size-4" />재실자 공지</Button>
+            <Button variant={portalSearchMode ? "default" : "outline"} size="sm" className="hidden lg:inline-flex" onClick={() => setPortalSearchMode((enabled) => !enabled)} aria-pressed={portalSearchMode}>
+              사내포털 검색모드 {portalSearchMode ? "ON" : "OFF"}
+            </Button>
             <Button variant="outline" size="sm" onClick={fetchVisitors}>
               <RefreshCw className="size-4" />
               새로고침
@@ -473,7 +477,7 @@ export function AdminDashboard() {
                     {searchQuery ? `검색결과: ${visitors.length}명` : `총 ${visitors.length}명`}
                   </span>
                 </div>
-                <VisitorTable visitors={visitors} onMutate={fetchVisitors} />
+                <VisitorTable visitors={visitors} onMutate={fetchVisitors} portalSearchMode={portalSearchMode} />
               </>
             )}
           </section>
