@@ -31,7 +31,7 @@ const supabase = createClient()
 
 type VisitorStatus = Visitor["status"]
 
-const PORTAL_URL = "http://kor1.samsung.net/portalapp/home"
+const PORTAL_URL = "http://kor1.samsung.net/mailapp"
 
 async function copyForPortal(value: string, label: string, portalSearchMode: boolean) {
   if (!portalSearchMode || !window.matchMedia("(min-width: 1024px)").matches) return
@@ -412,7 +412,7 @@ export function VisitorTable({
       const messages: Record<string, string> = {
         approve: "승인되어 입실 처리되었습니다.",
         exit: "퇴실 처리되었습니다.",
-        delete: "삭제 처리되어 삭제된 인원 목록으로 이동했습니다.",
+        delete: "삭제 처리되어 삭제된 인원 목록으로 이동했��니다.",
         restore: "복구되었습니다.",
       }
       
