@@ -146,7 +146,21 @@ export function AdminDashboard() {
     return deletedDate === selectedDate || (deletedDate === "" && registeredDate === selectedDate)
   })
 
-  const filtered = activeVisitors.filter((v) => {
+  const matchesSelectedDate = (v: Visitor) => {
+    const regDate = getLocalDateString(v.registeredAt || v.registered_at)
+    const enteredDate = getLocalDateString(v.enteredAt || v.entered_at)
+    const exitedDate = getLocalDateString(v.exitedAt || v.exited_at)
+
+    return (
+      regDate === selectedDate ||
+      (v.status === "onsite" && enteredDate !== "" && enteredDate < selectedDate) ||
+      (v.status === "exited" && enteredDate !== "" && enteredDate <= selectedDate && exitedDate > selectedDate) ||
+      (v.status === "exited" && exitedDate === selectedDate)
+    )
+  }
+
+  const dateScopedVisitors = activeVisitors.filter(matchesSelectedDate)
+  const filtered = dateScopedVisitors.filter((v) => {
     const query = searchQuery.toLowerCase()
     return (
       (v.name ?? "").toLowerCase().includes(query) ||
@@ -389,7 +403,7 @@ export function AdminDashboard() {
         </header>
 
         <div className="flex flex-col gap-6">
-          <StatCards visitors={processedVisitors} />
+          <StatCards visitors={dateScopedVisitors} />
 
           <section className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
